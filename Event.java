@@ -5,12 +5,14 @@ public class Event implements Comparable<Event>{
 	public int quarter;
 	public int rating;
 	public Date timestamp;
+	public String name;
 	
-	public Event(int ID, int quarter, int rating, Date timestamp) {
+	public Event(int ID, int quarter, int rating, Date timestamp, String name) {
 		this.ID = ID;
 		this.quarter = quarter;
 		this.rating = rating;
 		this.timestamp = timestamp; 
+		this.name = name;
 	}	
 	
 	
