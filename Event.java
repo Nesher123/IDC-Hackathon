@@ -1,4 +1,4 @@
-import java.sql.Date;
+import java.util.Date;
 
 public class Event implements Comparable<Event>{
 	public int ID;
@@ -11,11 +11,15 @@ public class Event implements Comparable<Event>{
 		this.quarter = quarter;
 		this.rating = rating;
 		this.timestamp = timestamp; 
-	}
+	}	
+	
+	
 	
 	@Override
     public int compareTo(Event event) {
         
         return this.timestamp.compareTo(event.timestamp);
     }
+	
+	
 }
