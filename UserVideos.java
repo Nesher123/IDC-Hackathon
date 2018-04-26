@@ -17,52 +17,59 @@ public class UserVideos {
 	 * 
 	 * ***** Bdikot!!!!!!
 	 */
-	
+
 	static String m_SystemType = "Eurobasket";
 
 	public static ArrayList<Event> openDirectory(String folderPath){
 		// list files
 		File directory = new File(folderPath);
 		File[] contents = directory.listFiles();	
-		
+
 		ArrayList<Event> idsAndTimestampsOfUserVideos =  new ArrayList<Event>();
-		
+
 		for (File f : contents) {
 			// upload the video
 		}
-				
-		for (File f : contents) {
+
+		ArrayList<Event> allUploadedClips = GetUploadedClips(m_SystemType);
+
+		for (Event e : allUploadedClips) {
 			// release the time-stamps
-			Date videoCreationTime = releaseTimeStamps(f.getName());
-			// request the id from the system according to the name.
-			int id = getVideos(f.getName(), m_SystemType);
-			
-			idsAndTimestampsOfUserVideos.add(new Event(id, 0, 0 ,videoCreationTime));
+			for(File f : contents)
+			{
+				if(f.getName().equals(e.))
+					Date videoCreationTime = releaseTimeStamps(f.getName());
+				// request the id from the system according to the name.
+				int id = e.ID;
+
+				idsAndTimestampsOfUserVideos.add(new Event(id, 0, 0 ,videoCreationTime));
+			}
+
 		}
-		
+
 		Collections.sort(idsAndTimestampsOfUserVideos);
-		
+
 		return idsAndTimestampsOfUserVideos;
 	}
-	
-    public static Date releaseTimeStamps(String videoFilePath) throws IOException {
 
-        File videoFile = new File(videoFilePath);
-        if (!videoFile.exists()) {
-            throw new FileNotFoundException("File " + videoFilePath + " not exists");
-        }
+	public static Date releaseTimeStamps(String videoFilePath) throws IOException {
 
-        if (!videoFile.canRead()) {
-            throw new IllegalStateException("No read permissions to file " + videoFilePath);
-        }
-        
-        IsoFile isoFile = new IsoFile(new FileInputStream(videoFilePath).getChannel());
-        MovieBox moov = isoFile.getMovieBox();
-        Date creationTime = moov.getMovieHeaderBox().getCreationTime();
+		File videoFile = new File(videoFilePath);
+		if (!videoFile.exists()) {
+			throw new FileNotFoundException("File " + videoFilePath + " not exists");
+		}
 
-        return creationTime;
-    }
-	
+		if (!videoFile.canRead()) {
+			throw new IllegalStateException("No read permissions to file " + videoFilePath);
+		}
+
+		IsoFile isoFile = new IsoFile(new FileInputStream(videoFilePath).getChannel());
+		MovieBox moov = isoFile.getMovieBox();
+		Date creationTime = moov.getMovieHeaderBox().getCreationTime();
+
+		return creationTime;
+	}
+
 	public static void main(String[] args) {		
 		openDirectory("C:\\Users\\neshe\\Desktop\\test");
 	}
