@@ -2,12 +2,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ApiRequests {
@@ -15,15 +13,17 @@ public class ApiRequests {
 
     public static void main(String[] args) throws IOException, JSONException, InterruptedException {
 
-        int [] ids = {11010250,10991451};
-        UploadVideoPost("test","C:\\Users\\AsafGetz\\Documents\\Desktop\\myVid.mp4");
+
+        UploadedClipsGet();
+        //int [] ids = {11010250,10991451};
+        //UploadVideoPost("test","C:\\Users\\AsafGetz\\Documents\\Desktop\\myVid.mp4");
     }
 
     // Get Functions
 
     public static JSONArray UploadedClipsGet() throws IOException, JSONException {
         authorizationToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1laWQiOjEwMDA1OCwidW5pcXVlX25hbWUiOjEwMDAwMDU4MiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc3lzdGVtIjoxMDEsIlRlYW1zUGVybWlzc2lvbnMiOiJbXSIsImlzcyI6InNlbGYiLCJhdWQiOiJodHRwOi8vY2xpcHJvLnR2IiwiZXhwIjoxNTI0OTIyNDg2LCJuYmYiOjE1MjQ2NjMyODZ9.30z3g7GZg87tku5QjNMLC7booSud-CsbE5XI-JDKZ3Y";
-        String url = "http://hacktonexternalapi.azurewebsites.net/Api/GetUploadedClips";
+        String url = "http://hacktonexternalapi.azurewebsites.net/Api/GetUploadedClips/?systemType=Eurobasket";
         URL object = new URL(url);
 
         HttpURLConnection con = (HttpURLConnection) object.openConnection();
@@ -32,6 +32,8 @@ public class ApiRequests {
         con.setRequestProperty("Accept", "application/json");
         con.setRequestProperty("Authorization", authorizationToken);
         con.setRequestMethod("GET");
+
+        System.out.println(con.getResponseMessage());
 
         BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
         StringBuilder sb = new StringBuilder();
@@ -156,5 +158,20 @@ public class ApiRequests {
                 "  \"systemType\": \"Eurobasket\"\n" +
                 "}";
         return result;
+    }
+
+    private static String buildGetParams(ArrayList<String> requests,String url){
+        boolean notFirstConcatination = false;
+        for(String s : requests)
+        {
+            if(notFirstConcatination)
+            {
+                url += "&";
+            }
+
+            notFirstConcatination = true;
+            url += "?request." + s.toString();
+        }
+        return url;
     }
 }
