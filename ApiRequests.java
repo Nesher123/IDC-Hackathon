@@ -12,14 +12,41 @@ public class ApiRequests {
     private static String authorizationToken;
 
     public static void main(String[] args) throws IOException, JSONException, InterruptedException {
-
-
-        UploadedClipsGet();
-        //int [] ids = {11010250,10991451};
-        //UploadVideoPost("test","C:\\Users\\AsafGetz\\Documents\\Desktop\\myVid.mp4");
+        ArrayList<String> pbpArguments = new ArrayList<>();
+        pbpArguments.add("videoId=1986615");
+        pbpArguments.add("systemType=Eurobasket");
+        String url = videoUrlGet(pbpArguments);
+        System.out.println(url);
+        //PBPGet(pbpArguments);
+       // UploadedClipsGet();
     }
 
     // Get Functions
+
+    public static String videoUrlGet(ArrayList<String> params) throws IOException, JSONException {
+        authorizationToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1laWQiOjEwMDA1OCwidW5pcXVlX25hbWUiOjEwMDAwMDU4MiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc3lzdGVtIjoxMDEsIlRlYW1zUGVybWlzc2lvbnMiOiJbXSIsImlzcyI6InNlbGYiLCJhdWQiOiJodHRwOi8vY2xpcHJvLnR2IiwiZXhwIjoxNTI0OTIyNDg2LCJuYmYiOjE1MjQ2NjMyODZ9.30z3g7GZg87tku5QjNMLC7booSud-CsbE5XI-JDKZ3Y";
+        String url = "http://hacktonexternalapi.azurewebsites.net/Api/GetVideoUrl?";
+        String urlParams = buildGetParams(params,url);
+        System.out.println(urlParams);
+        URL object = new URL(urlParams);
+        
+        HttpURLConnection con = (HttpURLConnection) object.openConnection();
+        con.setDoOutput(true);
+        con.setDoInput(true);
+        con.setRequestProperty("Accept", "application/json");
+        con.setRequestProperty("Authorization", authorizationToken);
+        con.setRequestMethod("GET");
+
+        System.out.println(con.getResponseMessage());
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            sb.append(line);
+        }
+        return sb.toString();
+    }
 
     public static JSONArray UploadedClipsGet() throws IOException, JSONException {
         authorizationToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1laWQiOjEwMDA1OCwidW5pcXVlX25hbWUiOjEwMDAwMDU4MiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc3lzdGVtIjoxMDEsIlRlYW1zUGVybWlzc2lvbnMiOiJbXSIsImlzcyI6InNlbGYiLCJhdWQiOiJodHRwOi8vY2xpcHJvLnR2IiwiZXhwIjoxNTI0OTIyNDg2LCJuYmYiOjE1MjQ2NjMyODZ9.30z3g7GZg87tku5QjNMLC7booSud-CsbE5XI-JDKZ3Y";
@@ -44,10 +71,13 @@ public class ApiRequests {
         return parseToJSON(sb.toString());
     }
 
-    public static JSONArray PBPGet() throws IOException, JSONException {
+    public static JSONArray PBPGet(ArrayList<String> params) throws IOException, JSONException {
         authorizationToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1laWQiOjEwMDA1OCwidW5pcXVlX25hbWUiOjEwMDAwMDU4MiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc3lzdGVtIjoxMDEsIlRlYW1zUGVybWlzc2lvbnMiOiJbXSIsImlzcyI6InNlbGYiLCJhdWQiOiJodHRwOi8vY2xpcHJvLnR2IiwiZXhwIjoxNTI0OTIyNDg2LCJuYmYiOjE1MjQ2NjMyODZ9.30z3g7GZg87tku5QjNMLC7booSud-CsbE5XI-JDKZ3Y";
-        String url = "http://hacktonexternalapi.azurewebsites.net/Api/SearchClipPbP/?request.gameIds=29010&request.teamIds=6385&request.minRating=5&request.systemType=Eurobasket";
-        URL object = new URL(url);
+        String url = "http://hacktonexternalapi.azurewebsites.net/Api/SearchClipPbP/?";
+
+        String urlParams = buildGetParams(params,url);
+        System.out.println(urlParams);
+        URL object = new URL(urlParams);
         HttpURLConnection con = (HttpURLConnection) object.openConnection();
 
         con.setRequestMethod("GET");
@@ -137,8 +167,7 @@ public class ApiRequests {
             return jsonArr;
         }
 
-    //  private static ArrayList<Event> convertJsonToArray();
-
+    // This function builds json-like query for CreateManual
     private static String buildManualVideoQuery(int[] eventsId, String videoName) {
 
         String list = Arrays.toString(eventsId).replace("[", "").replace("]", "");
@@ -160,6 +189,7 @@ public class ApiRequests {
         return result;
     }
 
+    // This function builds url get request according to given params
     private static String buildGetParams(ArrayList<String> requests,String url){
         boolean notFirstConcatination = false;
         for(String s : requests)
@@ -170,7 +200,7 @@ public class ApiRequests {
             }
 
             notFirstConcatination = true;
-            url += "?request." + s.toString();
+            url += "request." + s.toString();
         }
         return url;
     }
