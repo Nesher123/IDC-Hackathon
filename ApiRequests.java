@@ -12,24 +12,25 @@ public class ApiRequests {
     private static String authorizationToken;
 
     public static void main(String[] args) throws IOException, JSONException, InterruptedException {
-        ArrayList<String> pbpArguments = new ArrayList<>();
-        pbpArguments.add("videoId=1986615");
-        pbpArguments.add("systemType=Eurobasket");
-        String url = videoUrlGet(pbpArguments);
-        System.out.println(url);
-        //PBPGet(pbpArguments);
-       // UploadedClipsGet();
+        int[] arr ={11010250,10991451};
+        // CreateManualPost(arr,"bla");
+
+        ArrayList<String> videoList = new ArrayList<>();
+        videoList.add("videoId=1986615");
+        videoList.add("systemType=Eurobasket");
+
+        videoUrlGet(videoList);
     }
 
     // Get Functions
 
-    public static String videoUrlGet(ArrayList<String> params) throws IOException, JSONException {
+    public static JSONObject videoUrlGet(ArrayList<String> params) throws IOException, JSONException {
         authorizationToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1laWQiOjEwMDA1OCwidW5pcXVlX25hbWUiOjEwMDAwMDU4MiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc3lzdGVtIjoxMDEsIlRlYW1zUGVybWlzc2lvbnMiOiJbXSIsImlzcyI6InNlbGYiLCJhdWQiOiJodHRwOi8vY2xpcHJvLnR2IiwiZXhwIjoxNTI0OTIyNDg2LCJuYmYiOjE1MjQ2NjMyODZ9.30z3g7GZg87tku5QjNMLC7booSud-CsbE5XI-JDKZ3Y";
         String url = "http://hacktonexternalapi.azurewebsites.net/Api/GetVideoUrl?";
         String urlParams = buildGetParams(params,url);
         System.out.println(urlParams);
         URL object = new URL(urlParams);
-        
+
         HttpURLConnection con = (HttpURLConnection) object.openConnection();
         con.setDoOutput(true);
         con.setDoInput(true);
@@ -45,7 +46,7 @@ public class ApiRequests {
         while ((line = br.readLine()) != null) {
             sb.append(line);
         }
-        return sb.toString();
+        return(new JSONObject(sb.toString()));
     }
 
     public static JSONArray UploadedClipsGet() throws IOException, JSONException {
@@ -96,7 +97,7 @@ public class ApiRequests {
 
     // Post Functions
 
-    private static String CreateManualPost(int [] eventsId, String videoName) throws IOException, InterruptedException {
+    private static JSONObject CreateManualPost(int [] eventsId, String videoName) throws IOException, InterruptedException, JSONException {
 
         String queryParam = buildManualVideoQuery(eventsId,videoName);
 
@@ -123,38 +124,8 @@ public class ApiRequests {
         while ((line = br.readLine()) != null) {
             sb.append(line);
         }
-        return sb.toString();
-    }
-
-    private static String UploadVideoPost(String videoName,String content) throws IOException, JSONException {
-
-        String queryParam = buildUploadQuery(videoName, content);
-        System.out.println(queryParam);
-        authorizationToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1laWQiOjEwMDA1OCwidW5pcXVlX25hbWUiOjEwMDAwMDU4MiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc3lzdGVtIjoxMDEsIlRlYW1zUGVybWlzc2lvbnMiOiJbXSIsImlzcyI6InNlbGYiLCJhdWQiOiJodHRwOi8vY2xpcHJvLnR2IiwiZXhwIjoxNTI0OTIyNDg2LCJuYmYiOjE1MjQ2NjMyODZ9.30z3g7GZg87tku5QjNMLC7booSud-CsbE5XI-JDKZ3Y";
-        String url = "http://hacktonexternalapi.azurewebsites.net/Api/UploadClip";
-        URL object = new URL(url);
-
-        HttpURLConnection con = (HttpURLConnection) object.openConnection();
-        con.setRequestMethod("POST");
-        con.setRequestProperty("Content-Type", "application/json");
-        con.setRequestProperty("Authorization", authorizationToken);
-        con.setRequestProperty("Accept", "application/json");
-        con.setDoOutput(true);
-        con.setDoInput(true);
-
-        OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-        wr.write(queryParam);
-        wr.flush();
-        System.out.println(con.getResponseMessage());
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = br.readLine()) != null) {
-            sb.append(line);
-        }
-        return sb.toString();
-    }
+        return(new JSONObject(sb.toString()));
+}
 
     //Helper Functions
 
