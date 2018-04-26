@@ -37,10 +37,8 @@ public class VideoCreator {
 		//create list of IDS of vids
 		vidListToIDList();
 		//generate the request
-		String command = generateCreateVideoRequest();
 		//call to create vid
 		//TODO import their API
-		createVideo(finalVidIDs);
 		//save the vid 
 		saveVideo();
 	}
@@ -69,7 +67,7 @@ public class VideoCreator {
 	//Order the highlights and the vids from users in the final list in the order we want
 	private void interpolateVids() {
 		allVids.addAll(highlights);
-		allVids.addAll(PBP);
+		allVids.addAll(videosFromUser);
 		
 		//sort the vids by timestamp
 		Collections.sort(allVids);
