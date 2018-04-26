@@ -5,15 +5,14 @@ import java.util.Date;
 public class VideoCreator {
 	
 	//after PBP lookup such as searchClipPBP(game, action, team, player, minRating, systemType)
-	//TODO decide on rating threshold
-	ArrayList<Event> PBP; 
+	ArrayList<Event> PBP = new ArrayList<Event>();
 	
 	//each video is a made up of an ID and a timestamp 
 	//the list of user videos is sorted by timestamp 
-	ArrayList<Event> videosFromUser;
-	ArrayList<Event> highlights; 
+	ArrayList<Event> videosFromUser = new ArrayList<Event>();
+	ArrayList<Event> highlights = new ArrayList<Event>();
 	
-	ArrayList<Event> allVids; 
+	ArrayList<Event> allVids = new ArrayList<Event>();
 	//final list of videos that will be included (each item is the videoID and it will be in order that we want in the vid)
 	int[] finalVidIDs;
 	
@@ -27,20 +26,19 @@ public class VideoCreator {
 	}
 	
 	//function that calls the WSC function createVideo on finalVidIDs and saves final vid
-	public void createAndSaveVid() {
+	public int[] getAllVideoIDs() {
 		//sort the PBP
+		//System.out.println(PBP.size());
 		Collections.sort(PBP);
+		//System.out.println(PBP.size());
 		//create the highlights
 		chooseHighlights();
 		//interpolate with vids from user
 		interpolateVids();
 		//create list of IDS of vids
 		vidListToIDList();
-		//generate the request
-		//call to create vid
-		//TODO import their API
-		//save the vid 
-		saveVideo();
+		
+		return finalVidIDs;
 	}
 	
 	//Choose relevant highlights from PBP based on timestamp and numOfHighlights
@@ -48,7 +46,9 @@ public class VideoCreator {
 	private void chooseHighlights() {
 		//TODO determine what the desired interval is
 		//seconds * milliseconds/second
-		int desiredInterval = 10 * 10000; 
+		int desiredInterval = 15 * 10000; 
+		
+		System.out.println(PBP.size());
 		
 		//go through highlights and find ones in interval 
 		for(Event highlight : PBP) {
@@ -57,6 +57,8 @@ public class VideoCreator {
 			}
 		}
 		
+		highlights.add(PBP.get(1));
+		highlights.add(PBP.get(2));
 		//TODO check if we have enough highlights if not forcefully add more
 	}
 	

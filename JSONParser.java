@@ -10,6 +10,9 @@ public class JSONParser {
 	public static ArrayList<Event> PBPToEventsList(JSONArray PBP) throws JSONException {
 		ArrayList<Event> eventsList = new ArrayList<Event>();
 		
+		//System.out.println(PBP.toString());
+		//System.out.println(PBP.length());
+		
 		for (int i = 0; i < PBP.length(); i++) {
 		    JSONObject currPlay = PBP.getJSONObject(i);
 		    int ID = currPlay.getInt("id");
@@ -22,6 +25,21 @@ public class JSONParser {
 		    Date date = convertStringToDate(timestamp);
 		    Event currEvent = new Event(ID, quarter, rating, date, name);
 		    eventsList.add(currEvent);
+		}
+		//System.out.println(eventsList.size());
+		return eventsList;
+	}
+	
+	public static ArrayList<Event> videoListToEventsList(JSONArray videoList) throws JSONException{
+		ArrayList<Event> eventsList = new ArrayList<Event>();
+		
+		for(int i = 0; i < videoList.length(); i++) {
+			JSONObject currPlay = videoList.getJSONObject(i);
+			int ID = currPlay.getInt("id");
+			String name = currPlay.getString("eventName");
+			
+			Event currEvent = new Event(ID, 0, 0, null, name);
+			eventsList.add(currEvent);
 		}
 		
 		return eventsList;
