@@ -1,6 +1,6 @@
 import java.sql.Date;
 
-public class Event {
+public class Event implements Comparable<Event>{
 	public int ID;
 	public int quarter;
 	public int rating;
@@ -12,4 +12,10 @@ public class Event {
 		this.rating = rating;
 		this.timestamp = timestamp; 
 	}
+	
+	@Override
+    public int compareTo(Event event) {
+        
+        return this.timestamp.compareTo(event.timestamp);
+    }
 }
