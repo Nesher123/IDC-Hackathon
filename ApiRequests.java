@@ -1,26 +1,20 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class ApiRequests {
     private static String authorizationToken;
-
-    public static void main(String[] args) throws IOException, JSONException, InterruptedException {
-        int[] arr ={11010250,10991451};
-        // CreateManualPost(arr,"bla");
-        videoStatusGet(1986615);
-
-        ArrayList<String> videoList = new ArrayList<>();
-        videoList.add("videoId=1986615");
-        videoList.add("systemType=Eurobasket");
-        videoUrlGet(videoList);
-    }
 
     // Get Functions
 
@@ -29,27 +23,6 @@ public class ApiRequests {
         String url = "http://hacktonexternalapi.azurewebsites.net/Api/GetVideoUrl?";
         String urlParams = buildGetParams(params,url);
         URL object = new URL(urlParams);
-
-        HttpURLConnection con = (HttpURLConnection) object.openConnection();
-        con.setDoOutput(true);
-        con.setDoInput(true);
-        con.setRequestProperty("Accept", "application/json");
-        con.setRequestProperty("Authorization", authorizationToken);
-        con.setRequestMethod("GET");
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = br.readLine()) != null) {
-            sb.append(line);
-        }
-        return(new JSONObject(sb.toString()));
-    }
-
-    public static JSONObject videoStatusGet(int videoId) throws IOException, JSONException {
-        authorizationToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1laWQiOjEwMDA1OCwidW5pcXVlX25hbWUiOjEwMDAwMDU4MiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc3lzdGVtIjoxMDEsIlRlYW1zUGVybWlzc2lvbnMiOiJbXSIsImlzcyI6InNlbGYiLCJhdWQiOiJodHRwOi8vY2xpcHJvLnR2IiwiZXhwIjoxNTI0OTIyNDg2LCJuYmYiOjE1MjQ2NjMyODZ9.30z3g7GZg87tku5QjNMLC7booSud-CsbE5XI-JDKZ3Y";
-        String url = "http://hacktonexternalapi.azurewebsites.net/Api/GetVideoCreationStatus?videoId=" + videoId ;
-        URL object = new URL(url);
 
         HttpURLConnection con = (HttpURLConnection) object.openConnection();
         con.setDoOutput(true);
@@ -87,19 +60,39 @@ public class ApiRequests {
         }
         return parseToJSON(sb.toString());
     }
+    
+    public static JSONObject videoStatusGet(int videoId) throws IOException, JSONException {
+        authorizationToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1laWQiOjEwMDA1OCwidW5pcXVlX25hbWUiOjEwMDAwMDU4MiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc3lzdGVtIjoxMDEsIlRlYW1zUGVybWlzc2lvbnMiOiJbXSIsImlzcyI6InNlbGYiLCJhdWQiOiJodHRwOi8vY2xpcHJvLnR2IiwiZXhwIjoxNTI0OTIyNDg2LCJuYmYiOjE1MjQ2NjMyODZ9.30z3g7GZg87tku5QjNMLC7booSud-CsbE5XI-JDKZ3Y";
+        String url = "http://hacktonexternalapi.azurewebsites.net/Api/GetVideoCreationStatus?videoId=" + videoId ;
+        URL object = new URL(url);
+
+        HttpURLConnection con = (HttpURLConnection) object.openConnection();
+        con.setDoOutput(true);
+        con.setDoInput(true);
+        con.setRequestProperty("Accept", "application/json");
+        con.setRequestProperty("Authorization", authorizationToken);
+        con.setRequestMethod("GET");
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            sb.append(line);
+        }
+        return(new JSONObject(sb.toString()));
+    }
 
     public static JSONArray PBPGet(ArrayList<String> params) throws IOException, JSONException {
         authorizationToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1laWQiOjEwMDA1OCwidW5pcXVlX25hbWUiOjEwMDAwMDU4MiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc3lzdGVtIjoxMDEsIlRlYW1zUGVybWlzc2lvbnMiOiJbXSIsImlzcyI6InNlbGYiLCJhdWQiOiJodHRwOi8vY2xpcHJvLnR2IiwiZXhwIjoxNTI0OTIyNDg2LCJuYmYiOjE1MjQ2NjMyODZ9.30z3g7GZg87tku5QjNMLC7booSud-CsbE5XI-JDKZ3Y";
-        String url = "http://hacktonexternalapi.azurewebsites.net/Api/SearchClipPbP/?";
+        String url = "http://hacktonexternalapi.azurewebsites.net/Api/SearchClipPbP?";
 
         String urlParams = buildGetParams(params,url);
-        System.out.println(urlParams);
         URL object = new URL(urlParams);
         HttpURLConnection con = (HttpURLConnection) object.openConnection();
 
         con.setRequestMethod("GET");
         con.setRequestProperty("Accept", "application/json");
-        con.setRequestProperty("Authorization", authorizationToken);;
+        con.setRequestProperty("Authorization", authorizationToken);
 
         BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
         StringBuilder sb = new StringBuilder();
@@ -113,7 +106,9 @@ public class ApiRequests {
     // Post Functions
 
     public static JSONObject CreateManualPost(int [] eventsId, String videoName) throws IOException, InterruptedException, JSONException {
-
+    	for(int element : eventsId) {
+    		System.out.println(element);
+    	}
         String queryParam = buildManualVideoQuery(eventsId,videoName);
 
         authorizationToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1laWQiOjEwMDA1OCwidW5pcXVlX25hbWUiOjEwMDAwMDU4MiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc3lzdGVtIjoxMDEsIlRlYW1zUGVybWlzc2lvbnMiOiJbXSIsImlzcyI6InNlbGYiLCJhdWQiOiJodHRwOi8vY2xpcHJvLnR2IiwiZXhwIjoxNTI0OTIyNDg2LCJuYmYiOjE1MjQ2NjMyODZ9.30z3g7GZg87tku5QjNMLC7booSud-CsbE5XI-JDKZ3Y";
@@ -147,7 +142,6 @@ public class ApiRequests {
             JSONArray jsonArr = new JSONArray(request);
             for (int i = 0; i < jsonArr.length(); i++) {
                 JSONObject jsonObj = jsonArr.getJSONObject(i);
-                System.out.println(jsonObj);
             }
             return jsonArr;
         }

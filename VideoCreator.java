@@ -28,6 +28,7 @@ public class VideoCreator {
 	//function that calls the WSC function createVideo on finalVidIDs and saves final vid
 	public int[] getAllVideoIDs() {
 		//sort the PBP
+		removeReplay();
 		//System.out.println(PBP.size());
 		Collections.sort(PBP);
 		//System.out.println(PBP.size());
@@ -41,25 +42,64 @@ public class VideoCreator {
 		return finalVidIDs;
 	}
 	
+	public void removeReplay(){
+		ArrayList<Event> PBPnoReplay = (ArrayList<Event>) PBP.clone();
+		for(Event e : PBP){
+			if(e.name.contains("Replay")){
+				PBPnoReplay.remove(e);
+			}
+		}
+		PBP = (ArrayList<Event>) PBPnoReplay.clone();
+	}
+	
 	//Choose relevant highlights from PBP based on timestamp and numOfHighlights
 	//put the vids ID's and timestamps into the list of highlight
 	private void chooseHighlights() {
-		//TODO determine what the desired interval is
 		//seconds * milliseconds/second
 		int desiredInterval = 15 * 10000; 
+		int numVids = videosFromUser.size();
 		
-		System.out.println(PBP.size());
+		int numHighlights;
+		if(numVids < 5) numHighlights = numVids;
+		else numHighlights = 10 - numVids; 
+		//System.out.println(PBP.size());
 		
 		//go through highlights and find ones in interval 
 		for(Event highlight : PBP) {
 			for(Event userVid : videosFromUser) {
-				if(getTimeDifference(highlight.timestamp, userVid.timestamp) <= desiredInterval) highlights.add(highlight);
+				if(highlights.size() < numHighlights) {
+					if((getTimeDifference(highlight.timestamp, userVid.timestamp) <= desiredInterval) && !(highlight.eventsListContains(highlights))) {
+						highlights.add(highlight);
+					}
+				}
 			}
 		}
 		
-		highlights.add(PBP.get(1));
-		highlights.add(PBP.get(2));
-		//TODO check if we have enough highlights if not forcefully add more
+		//check if we have enough highlights if not forcefully add more
+		int quarter = 1;
+		int diff = numHighlights - highlights.size();
+		int i = 0;
+		int desiredRating = 5;
+		
+		if(highlights.size() < numHighlights) {
+			while(diff > 0) {
+				if(i >= PBP.size()) {
+					i = 0;
+					if(quarter == 4) desiredRating = 4;
+					else quarter++;
+				}
+				
+				Event currHighlight = PBP.get(i);
+
+				if(currHighlight.quarter == quarter && currHighlight.rating == desiredRating && !(currHighlight.eventsListContains(highlights))) {
+					highlights.add(currHighlight);
+					diff--;
+					if(quarter == 4) quarter = 1;
+					else quarter++;
+				}
+				i++; 
+			}
+		}
 	}
 	
 	private long getTimeDifference(Date first, Date second) {

@@ -6,25 +6,25 @@ import org.json.JSONObject;
 
 public class Main {
 	public static void main(String[] args) throws IOException, JSONException, InterruptedException {
+		//get from command line:
+		//folderPath title gameIds teamIds
+		
 		int[] vidIDs; 
-		String title = "test";
+		String title = args[1];
 		String systemType = "Eurobasket";
 		
 		//get user videos from directory
-		String folderPath = "/Users/Ronitamir/Desktop/Test";
+		String folderPath = args[0]; 
 		ArrayList<Event> userVids = UserVideos.openDirectory(folderPath);
-		
-		System.out.println(userVids.size());
 		
 		//get PBP from WSC Sports server
 		ArrayList<String> pbpArguments = new ArrayList<>();
-		pbpArguments.add("gameIds=29010");
-		pbpArguments.add("teamIds=6385");
+		pbpArguments.add("gameIds=" + args[2]);
+		pbpArguments.add("teamIds=" + args[3]);
 		pbpArguments.add("minRating=4");
-		pbpArguments.add("systemType=Eurobasket");
+		pbpArguments.add("systemType=" + systemType);
 		
 		ArrayList<Event> PBPEvents = JSONParser.PBPToEventsList(ApiRequests.PBPGet(pbpArguments));
-		//System.out.println(PBPEvents.size());
 		
 		VideoCreator videoCreator = new VideoCreator(PBPEvents, userVids);
 		vidIDs = videoCreator.getAllVideoIDs();
@@ -33,12 +33,20 @@ public class Main {
 		System.out.println(ID.toString());
 		int id = ID.getInt("videoId");
 		
+		waitForOkStatus(id);
+		
 		ArrayList<String> urlArgs = new ArrayList<>();
-		urlArgs.add("id=" + id);
-		urlArgs.add("systemType=Eurobasket");
+		urlArgs.add("videoId=" + id);
+		urlArgs.add("systemType=" + systemType);
 		
 		JSONObject URLobj = ApiRequests.videoUrlGet(urlArgs);
 		String URL = URLobj.getString("videoUrl");
 		System.out.println(URL);		
+	}
+	
+	public static void waitForOkStatus(int videoId) throws IOException, JSONException, InterruptedException {
+        while(ApiRequests.videoStatusGet(videoId).getInt("videoCreationStatus") != 3){
+            	Thread.sleep(2000);
+        }
 	}
 }

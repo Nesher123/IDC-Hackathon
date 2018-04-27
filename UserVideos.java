@@ -2,6 +2,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.Date;
 
 import org.json.JSONArray;
@@ -30,30 +35,29 @@ public class UserVideos {
 		File directory = new File(folderPath);
 		File[] contents = directory.listFiles();
 		
-		//System.out.println(contents.length);
 		ArrayList<Event> idsAndTimestampsOfUserVideos = new ArrayList<Event>();
 
 		for (File f : contents) {
 			// upload the video
-			//UploadVideoPost(f.getName(), f, m_SystemType);
+			//ApiRequests.UploadVideoPost(f.getName(), f, m_SystemType);
+			//currently uploading videos from swagger
+			//TODO
 		}
 
 		JSONArray uploadedClips = ApiRequests.UploadedClipsGet();
 		ArrayList<Event> uploadedClipsEvents = JSONParser.videoListToEventsList(uploadedClips);
 		
-		System.out.println(uploadedClipsEvents.size());
-		
 		for (Event e : uploadedClipsEvents) {
 			//release the time-stamps
 			for (File f : contents) {
-//				System.out.println(f.getName());
-//				System.out.println(e.name);
-//				System.out.println();
 				if (f.getName().equals(e.name + ".m4v")) {
-//				if(f.getName().equals("luna") || f.getName().equals("boaz")) {
-					//Date videoCreationTime = releaseTimeStamps(f.getName());
+					//Date videoCreationTime = releaseTimeStamps(folderPath + "/" + f.getName());
+					Date videoCreationTime;
+					//TODO this is a test to force timestamp to be something, remove!!
 					
-					Date videoCreationTime = new Date(0, 0, 0, 0, 0, 0);
+					if(e.name.equals("luna")) videoCreationTime = new Date(2017, 9, 2, 15, 56, 32);
+					else videoCreationTime = releaseTimeStamps(folderPath + "/" + f.getName());
+					
 					// request the id from the system according to the name.
 					int id = e.ID;
 					idsAndTimestampsOfUserVideos.add(new Event(id, 0, 0, videoCreationTime, e.name));
@@ -66,19 +70,12 @@ public class UserVideos {
 	}
 
 	public static Date releaseTimeStamps(String videoFilePath) throws IOException {
-		File videoFile = new File(videoFilePath);
-		if (!videoFile.exists()) {
-			throw new FileNotFoundException("File " + videoFilePath + " not exists");
-		}
-
-		if (!videoFile.canRead()) {
-			throw new IllegalStateException("No read permissions to file " + videoFilePath);
-		}
-
-		IsoFile isoFile = new IsoFile(new FileInputStream(videoFilePath).getChannel());
-		MovieBox moov = isoFile.getMovieBox();
-		Date creationTime = moov.getMovieHeaderBox().getCreationTime();
-
-		return creationTime;
+		Path vidPath = Paths.get(videoFilePath);
+		BasicFileAttributes attr = Files.readAttributes(vidPath, BasicFileAttributes.class);
+		FileTime creationTime = attr.creationTime();
+		String creationTimeStr = creationTime.toString();
+		String creationStrClipped = creationTimeStr.substring(0, creationTimeStr.length()-1);
+		Date date = JSONParser.convertStringToDate(creationStrClipped);
+		return date;
 	}
 }

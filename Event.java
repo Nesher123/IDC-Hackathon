@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Event implements Comparable<Event>{
@@ -15,13 +16,20 @@ public class Event implements Comparable<Event>{
 		this.name = name;
 	}	
 	
-	
-	
 	@Override
     public int compareTo(Event event) {
         
         return this.timestamp.compareTo(event.timestamp);
     }
 	
+	public boolean eventsListContains(ArrayList<Event> eventsList) {
+		for(Event event : eventsList) {
+			if ((this.ID == event.ID) && (this.quarter == event.quarter) && (this.rating == event.rating) && 
+					(this.timestamp.equals(event.timestamp)) && (this.name.equals(event.name))){
+				return true; 
+			}
+		}
+		return false;
+	}
 	
 }
