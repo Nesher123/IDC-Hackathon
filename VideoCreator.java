@@ -74,10 +74,12 @@ public class VideoCreator {
 				}
 			}
 		}
+		System.out.println(highlights.size());
 		
 		//check if we have enough highlights if not forcefully add more
 		int quarter = 1;
 		int diff = numHighlights - highlights.size();
+		if(PBP.size() < diff) diff = PBP.size();
 		int i = 0;
 		int desiredRating = 5;
 		
@@ -99,6 +101,12 @@ public class VideoCreator {
 				}
 				i++; 
 			}
+//			for(int j = 0; j < diff; j++) {
+//				Event currHighlight = PBP.get(j);
+//				if(!(currHighlight.eventsListContains(highlights))) {
+//					highlights.add(currHighlight);
+//				}
+//			}
 		}
 	}
 	
@@ -122,18 +130,5 @@ public class VideoCreator {
 		for(int i = 0; i < allVids.size(); i++) {
 			finalVidIDs[i] = allVids.get(i).ID;
 		}
-	}
-	
-	private String generateCreateVideoRequest() {
-		return null; 
-	}
-
-	private void saveVideo() {
-		//TODO should we save or upload to youtube? 
-	}
-	
-	//OPTIONAL decide which vids should be used
-	private void filterOutUserVids() {
-		
 	}
 }

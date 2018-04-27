@@ -17,16 +17,6 @@ import java.util.Collections;
 
 
 public class UserVideos {
-	/*
-	 * 1. open directory 
-	 * 2. go over all videos inside the directory. 
-	 * 3. For each video, get its time-stamp 
-	 * 	3.1. upload to WSC server 
-	 * 	3.2. get ID 
-	 * 4. return a sorted (by time-stamps) list containing all videos IDs AND time-stamps
-	 * 
-	 * ***** Bdikot!!!!!!
-	 */
 
 	static String m_SystemType = "Eurobasket";
 
@@ -34,14 +24,17 @@ public class UserVideos {
 		//list files
 		File directory = new File(folderPath);
 		File[] contents = directory.listFiles();
+		for(File file : contents) {
+			System.out.println(file.getName());
+		}
 		
 		ArrayList<Event> idsAndTimestampsOfUserVideos = new ArrayList<Event>();
 
 		for (File f : contents) {
+			if(f.getName().contains(".png") || f.getName().contains(".jpg")) f = convertImgToVideo();
 			// upload the video
 			//ApiRequests.UploadVideoPost(f.getName(), f, m_SystemType);
 			//currently uploading videos from swagger
-			//TODO
 		}
 
 		JSONArray uploadedClips = ApiRequests.UploadedClipsGet();
@@ -50,13 +43,8 @@ public class UserVideos {
 		for (Event e : uploadedClipsEvents) {
 			//release the time-stamps
 			for (File f : contents) {
-				if (f.getName().equals(e.name + ".m4v")) {
-					//Date videoCreationTime = releaseTimeStamps(folderPath + "/" + f.getName());
-					Date videoCreationTime;
-					//TODO this is a test to force timestamp to be something, remove!!
-					
-					if(e.name.equals("luna")) videoCreationTime = new Date(2017, 9, 2, 15, 56, 32);
-					else videoCreationTime = releaseTimeStamps(folderPath + "/" + f.getName());
+				if (f.getName().equals(e.name + ".mp4")) {
+					Date videoCreationTime = releaseTimeStamps(folderPath + "/" + f.getName());
 					
 					// request the id from the system according to the name.
 					int id = e.ID;
@@ -67,6 +55,16 @@ public class UserVideos {
 
 		Collections.sort(idsAndTimestampsOfUserVideos);
 		return idsAndTimestampsOfUserVideos;
+	}
+	
+	private static File convertImgToVideo() throws IOException {
+		String filePath = "output";
+		File fileP = new File(filePath);
+		String commands = "D:\\ffmpeg-win32-static\\bin\\ffmpeg -f image2 -i "
+		        + fileP + "\\image%5d.png " + fileP + "\\video.mp4";
+		System.out.println(commands);
+		Runtime.getRuntime().exec(commands);
+		return fileP; 
 	}
 
 	public static Date releaseTimeStamps(String videoFilePath) throws IOException {

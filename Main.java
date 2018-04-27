@@ -16,7 +16,6 @@ public class Main {
 		//get user videos from directory
 		String folderPath = args[0]; 
 		ArrayList<Event> userVids = UserVideos.openDirectory(folderPath);
-		
 		//get PBP from WSC Sports server
 		ArrayList<String> pbpArguments = new ArrayList<>();
 		pbpArguments.add("gameIds=" + args[2]);
@@ -25,6 +24,7 @@ public class Main {
 		pbpArguments.add("systemType=" + systemType);
 		
 		ArrayList<Event> PBPEvents = JSONParser.PBPToEventsList(ApiRequests.PBPGet(pbpArguments));
+		System.out.println(PBPEvents.size());
 		
 		VideoCreator videoCreator = new VideoCreator(PBPEvents, userVids);
 		vidIDs = videoCreator.getAllVideoIDs();

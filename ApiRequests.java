@@ -106,10 +106,8 @@ public class ApiRequests {
     // Post Functions
 
     public static JSONObject CreateManualPost(int [] eventsId, String videoName) throws IOException, InterruptedException, JSONException {
-    	for(int element : eventsId) {
-    		System.out.println(element);
-    	}
-        String queryParam = buildManualVideoQuery(eventsId,videoName);
+    	
+        String queryParam = buildManualVideoQuery(eventsId, videoName);
 
         authorizationToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1laWQiOjEwMDA1OCwidW5pcXVlX25hbWUiOjEwMDAwMDU4MiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc3lzdGVtIjoxMDEsIlRlYW1zUGVybWlzc2lvbnMiOiJbXSIsImlzcyI6InNlbGYiLCJhdWQiOiJodHRwOi8vY2xpcHJvLnR2IiwiZXhwIjoxNTI0OTIyNDg2LCJuYmYiOjE1MjQ2NjMyODZ9.30z3g7GZg87tku5QjNMLC7booSud-CsbE5XI-JDKZ3Y";
         String url = "http://hacktonexternalapi.azurewebsites.net/Api/CreateManual";
@@ -154,15 +152,6 @@ public class ApiRequests {
                 "  \"eventClipIds\": [\n    " + list + " \n" +
                 "  ],\n" +
                 "  \"title\": \"" + videoName + "\",\n" +
-                "  \"systemType\": \"Eurobasket\"\n" +
-                "}";
-        return result;
-    }
-
-    private static String buildUploadQuery(String videoName, String content) {
-        String result = "{\n" +
-                "  \"name\": \"" + videoName + "\",\n" +
-                "  \"content\": \"" + content + "\",\n" +
                 "  \"systemType\": \"Eurobasket\"\n" +
                 "}";
         return result;
