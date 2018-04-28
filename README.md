@@ -2,8 +2,10 @@
 
 Hi!
 Here you can upload files by dragging them and review past versions of our project :)
+
 WSC's API urls:
 http://hacktonexternalapi.azurewebsites.net/Api.html#
+
 http://hacktonexternalapi.azurewebsites.net/swagger/ui/index
 
 Good luck!
