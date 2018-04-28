@@ -9,6 +9,10 @@ http://hacktonexternalapi.azurewebsites.net/Api.html
 
 http://hacktonexternalapi.azurewebsites.net/swagger/ui/index
 
+<p>This is <a href="http://example.com" target="_blank">a link</a> that opens in a new window.</p>
+
+This is [a link](http://example.com){:target="_blank"} that opens in a new window.
+
 Good luck!
 
 UPDATE (28/4/18): Won 1st place! Kol Hakavod team!!!
