@@ -43,7 +43,7 @@ public class UserVideos {
 		for (Event e : uploadedClipsEvents) {
 			//release the time-stamps
 			for (File f : contents) {
-				if (f.getName().equals(e.name + ".mp4")) {
+				if (f.getName().equals(e.name + ".m4v")) {
 					Date videoCreationTime = releaseTimeStamps(folderPath + "/" + f.getName());
 					
 					// request the id from the system according to the name.
