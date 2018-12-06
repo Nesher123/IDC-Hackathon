@@ -20,3 +20,6 @@ https://wsczoominwestus.azureedge.net/editor-hack/5cf2db16-6f25-4ac4-8956-2b8488
 
 Winning photo:
 https://www.facebook.com/HackIDC/photos/ms.c.eJw9yMENACAIBMGODC4eQv~_NGUl0noPtUJmjLDxj0IF0Y4b~;yAKteuGogzjSLg20.bps.t.720063188/2076592589225493/?type=3&theater
+
+Event Video:
+https://www.facebook.com/HackIDC/videos/2089314844619934/
